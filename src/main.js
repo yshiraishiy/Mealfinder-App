@@ -58,6 +58,20 @@ function getMealById(mealID) {
     });
 }
 
+// ランダムに食事を取得
+function getRandomMeal() {
+  mealsEl.innerHTML = "";
+  resultHeading.innerHTML = "";
+
+  fetch(`https://www.themealdb.com/api/json/v1/1/random.php`)
+    .then((res) => res.json())
+    .then((data) => {
+      const meal = data.meals[0];
+
+      addMealToDom(meal);
+    });
+}
+
 // 食事情報をDOMに追加
 function addMealToDom(meal) {
   const ingredients = [];
@@ -72,8 +86,6 @@ function addMealToDom(meal) {
     }
   }
 
-  console.log(meal)
-
   single_mealEl.innerHTML = `
     <div class="single-meal">
       <h1>${meal.strMeal}</h1>
@@ -86,17 +98,20 @@ function addMealToDom(meal) {
         <p>${meal.strInstructions}</p>
         <h2>Ingredients</h2>
         <ul>
-          ${ingredients.map((ing) => {
-            return `<li>${ing}</li>`
-          }).join("")}
+          ${ingredients
+            .map((ing) => {
+              return `<li>${ing}</li>`;
+            })
+            .join("")}
         </ul>
       </div>
     </div>
-  `
+  `;
 }
 
 // イベントリスナー
 submit.addEventListener("submit", searchMeal);
+random.addEventListener("click", getRandomMeal);
 
 mealsEl.addEventListener("click", (e) => {
   const path = e.composedPath();
